@@ -66,7 +66,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 		auto StatusComp = OtherActor->GetComponentByClass<UStatusEffectComponent>();
 		if (StatusComp)
 		{
-			if (StatusComp->QueryStatusEffects(ProjectileEffect))
+			if (StatusComp->QueryStatusEffects(ProjectileEffect) == true)
 			{
 				StatusComp->SetStatusEffect(ProjectileEffect, true);
 			}

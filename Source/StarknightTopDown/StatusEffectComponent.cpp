@@ -43,8 +43,7 @@ void UStatusEffectComponent::SetStatusEffect(EStatusEffect NewStatus, bool IsAct
 	FTimerHandle BurnHandle;
 	FTimerHandle SlowHandle;
 
-
-	StatusEffects.Add(NewStatus, IsActive);
+	//StatusEffects.Add(NewStatus, IsActive);
 	if (IsActive)
 	{
 		switch (NewStatus)
@@ -53,7 +52,13 @@ void UStatusEffectComponent::SetStatusEffect(EStatusEffect NewStatus, bool IsAct
 			break;
 
 			case EStatusEffect::ESE_Stunned:
-				GetWorld()->GetTimerManager().SetTimer(StunHandle, this, &UStatusEffectComponent::ResetStunned, 3.0f, false);
+				UE_LOG(LogTemp, Warning, TEXT("Stunned"));
+				StatusEffects.Add(EStatusEffect::ESE_Stunned, true);
+
+				if (GetWorld()->GetTimerManager().IsTimerActive(StunHandle) == false)
+				{
+					GetWorld()->GetTimerManager().SetTimer(StunHandle, this, &UStatusEffectComponent::ResetStunned, 3.f, false);
+				}
 			break;
 
 			case EStatusEffect::ESE_Slowed:
@@ -74,9 +79,34 @@ bool UStatusEffectComponent::QueryStatusEffects(EStatusEffect Query)
 	}
 }
 
+bool UStatusEffectComponent::IsStatusActive(EStatusEffect Query)
+{
+	bool bKeyPresent = QueryStatusEffects(Query);
+
+	if (bKeyPresent)
+	{
+		if (StatusEffects[Query] == true)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
+
 void UStatusEffectComponent::ResetStunned()
 {
-	if(IsStatusActive(EStatusEffect::ESE_Stunned)) StatusEffects.Add(EStatusEffect::ESE_Stunned, false);
+	if (IsStatusActive(EStatusEffect::ESE_Stunned))
+	{
+		StatusEffects.Add(EStatusEffect::ESE_Stunned, false);
+		UE_LOG(LogTemp, Warning, TEXT("Stunned Reset"));
+	}
 }
 
 

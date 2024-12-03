@@ -88,12 +88,24 @@ void AEnemyController::UpdateBlackboard(UBlackboardComponent* InBlackboardComp)
 
     if (StatusComp)
     {
-        if(StatusComp->QueryStatusEffects(EStatusEffect::ESE_Stunned)) bStunned = StatusComp->IsStatusActive(EStatusEffect::ESE_Stunned);
+        if (StatusComp->QueryStatusEffects(EStatusEffect::ESE_Stunned))
+        {
+            bStunned = StatusComp->IsStatusActive(EStatusEffect::ESE_Stunned);
+        }
     }
 
     InBlackboardComp->SetValueAsBool(FName("Bloodied"), bBloodied);
     InBlackboardComp->SetValueAsBool(FName("Stunned"), bStunned);
     
+    if (bStunned)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Stunned"));
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Stunned Cleared"));
+    }
+
     uint8 StateByte = (uint8)EnemyState;
     InBlackboardComp->SetValueAsEnum(FName("State"),StateByte);
 }

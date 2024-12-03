@@ -36,7 +36,7 @@ public:
 
 	bool QueryStatusEffects(EStatusEffect Query);
 
-	bool IsStatusActive(EStatusEffect Query) { return StatusEffects[Query]; }
+	bool IsStatusActive(EStatusEffect Query);
 
 	UFUNCTION(BlueprintCallable)
 	void ResetStunned();
