@@ -28,6 +28,13 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	TMap<EStatusEffect, bool> StatusEffects;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	class UNiagaraSystem* StunnedEffect;
+
+	class UNiagaraComponent* ActiveStunEffect;
+	//UNiagaraSystem* BurnEffect;
+	//UNiagaraSystem* SlowEffect;
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

@@ -2,11 +2,14 @@
 
 
 #include "StatusEffectComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/DamageType.h"
 #include "StatusEffect.h"
 #include "EnemyController.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 // Sets default values for this component's properties
 UStatusEffectComponent::UStatusEffectComponent()
@@ -26,6 +29,11 @@ void UStatusEffectComponent::BeginPlay()
 	
 	// ...
 	
+	if (!ActiveStunEffect)
+	{
+		ActiveStunEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(StunnedEffect, GetOwner()->GetComponentByClass<USkeletalMeshComponent>(), FName("Torso"), FVector(0.f), FRotator(0.f), EAttachLocation::SnapToTarget, false);
+		ActiveStunEffect->Deactivate();
+	}
 }
 
 
@@ -54,6 +62,8 @@ void UStatusEffectComponent::SetStatusEffect(EStatusEffect NewStatus, bool IsAct
 			case EStatusEffect::ESE_Stunned:
 				UE_LOG(LogTemp, Warning, TEXT("Stunned"));
 				StatusEffects.Add(EStatusEffect::ESE_Stunned, true);
+
+				ActiveStunEffect->Activate();
 
 				if (GetWorld()->GetTimerManager().IsTimerActive(StunHandle) == false)
 				{
@@ -105,6 +115,8 @@ void UStatusEffectComponent::ResetStunned()
 	if (IsStatusActive(EStatusEffect::ESE_Stunned))
 	{
 		StatusEffects.Add(EStatusEffect::ESE_Stunned, false);
+		ActiveStunEffect->Deactivate();
+
 		UE_LOG(LogTemp, Warning, TEXT("Stunned Reset"));
 	}
 }

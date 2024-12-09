@@ -51,8 +51,8 @@ protected:
 	void PrimaryAction();
 	void SecondaryAction();
 
-	void EquipAssaultRifle();
-	void EquipShotgun();
+	void EquipPlasmaGun();
+	void EquipLightningGun();
 	void EquipQuaker();
 	void ResetCanTakeDamage();
 
@@ -115,6 +115,8 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	float HurtReactTime{ 3.f };
+
+	float CurrentChargeAmount;
 
 	bool bInvulnerable = false;
 

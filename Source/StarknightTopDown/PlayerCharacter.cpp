@@ -53,29 +53,11 @@ APlayerCharacter::APlayerCharacter()
 	InteractorComp = CreateDefaultSubobject<UInteractorComponent>(TEXT("Interactor Comp"));
 }
 
-void APlayerCharacter::SetPrimaryDown(const FInputActionValue& KeyValue)
-{
-	bPrimaryDown = KeyValue.Get<bool>();
-	if (WeaponComp->EquippedWeapon.WeaponAmmoType == EAmmoType::EAT_Plasma)
-	{
-		if (bPrimaryDown)PrimaryAction();
-		else WeaponComp->ResetCanBeFired();
-	}
-}
-
-void APlayerCharacter::SetSecondaryDown(const FInputActionValue& KeyValue)
-{
-	bSecondaryDown = KeyValue.Get<bool>();
-
-	if (bSecondaryDown) EquipQuaker();
-	else EquipAssaultRifle();
-	//if (WeaponComp->EquippedWeapon.WeaponAmmoType == EAmmoType::EAT_Plasma) WeaponComp->ResetCanBeFired();
-}
 
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	EquipAssaultRifle();
+	EquipPlasmaGun();
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -94,21 +76,53 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	Input->BindAction<APlayerCharacter>(PrimaryInputAction, ETriggerEvent::Completed, this, &APlayerCharacter::SetPrimaryDown);
 	Input->BindAction<APlayerCharacter>(SecondaryInputAction, ETriggerEvent::Started, this, &APlayerCharacter::SetSecondaryDown);
 	Input->BindAction<APlayerCharacter>(SecondaryInputAction, ETriggerEvent::Completed, this, &APlayerCharacter::SetSecondaryDown);
-	Input->BindAction<APlayerCharacter>(Hotkey1Action, ETriggerEvent::Triggered, this, &APlayerCharacter::EquipAssaultRifle);
-	Input->BindAction<APlayerCharacter>(Hotkey2Action, ETriggerEvent::Triggered, this, &APlayerCharacter::EquipShotgun);
+	Input->BindAction<APlayerCharacter>(Hotkey1Action, ETriggerEvent::Triggered, this, &APlayerCharacter::EquipPlasmaGun);
+	Input->BindAction<APlayerCharacter>(Hotkey2Action, ETriggerEvent::Triggered, this, &APlayerCharacter::EquipLightningGun);
 	Input->BindAction<APlayerCharacter>(Hotkey3Action, ETriggerEvent::Triggered, this, &APlayerCharacter::EquipQuaker);
 	//Input->BindAction<APlayerCharacter>(SecondaryInputAction, ETriggerEvent::Started, this, &APlayerCharacter::SecondaryAction);
 	//Input->BindAction<APlayerCharacter>(PrimaryInputAction, ETriggerEvent::, this, &APlayerCharacter::SetPrimaryUp);
+}
+
+void APlayerCharacter::SetPrimaryDown(const FInputActionValue& KeyValue)
+{
+	bPrimaryDown = KeyValue.Get<bool>();
+	 //if (WeaponComp->EquippedWeapon.WeaponAmmoType == EAmmoType::EAT_Plasma)
+	//{
+	if (bPrimaryDown)
+	{
+		if (!bSecondaryDown)
+		{
+			PrimaryAction();
+		}
+		else
+		{
+			if (CurrentChargeAmount >= 1.0f)
+			{
+				SecondaryAction();
+			}
+			else
+			{
+				PrimaryAction();
+			}
+		}
+	}
+		CurrentChargeAmount = 0.f;
+		//else WeaponComp->ResetCanBeFired();
+	//}
+}
+
+void APlayerCharacter::SetSecondaryDown(const FInputActionValue& KeyValue)
+{
+	bSecondaryDown = KeyValue.Get<bool>();
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Look();
 
-	if (bPrimaryDown)
+	if (bSecondaryDown)
 	{
-		//if (WeaponComp->EquippedWeapon.WeaponAmmoType != EAmmoType::EAT_Plasma)PrimaryAction();
-		PrimaryAction();
+		CurrentChargeAmount += .01f;
 	}
 }
 
@@ -156,7 +170,7 @@ void APlayerCharacter::Interact()
 void APlayerCharacter::PrimaryAction()
 {
 	if (WeaponComp->GetCanBeFired() == false)return;
-	if (WeaponComp->HasAmmo(WeaponComp->EquippedWeapon.WeaponAmmoType) == false)return;
+	//if (WeaponComp->HasAmmo(WeaponComp->EquippedWeapon.WeaponAmmoType) == false)return;
 
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 
@@ -183,9 +197,33 @@ void APlayerCharacter::PrimaryAction()
 
 void APlayerCharacter::SecondaryAction()
 {
+	if (WeaponComp->GetCanBeFired() == false)return;
+	if (WeaponComp->HasAmmo(WeaponComp->EquippedWeapon.WeaponAmmoType) == false)return;
+
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+
+	FVector MouseWorldLocation;
+	FVector MouseWorldRotation;
+	FVector BeamEndLocation;
+
+	FHitResult ScreenTraceHit;
+
+	bool CursorToWorld = PlayerController->DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldRotation);
+
+	FVector End{ MouseWorldLocation + MouseWorldRotation * 2000 };
+
+	if (CursorToWorld)
+	{
+		GetWorld()->LineTraceSingleByChannel(ScreenTraceHit, MouseWorldLocation, End, ECollisionChannel::ECC_Visibility);
+
+		if (ScreenTraceHit.bBlockingHit)
+		{
+			WeaponComp->FireSecondary(WeaponMesh, ScreenTraceHit.Location);
+		}
+	}
 }
 
-void APlayerCharacter::EquipAssaultRifle()
+void APlayerCharacter::EquipPlasmaGun()
 {
 	if(WeaponComp->QueryWeapons(EAmmoType::EAT_Plasma))
 	{
@@ -195,9 +233,9 @@ void APlayerCharacter::EquipAssaultRifle()
 	}
 }
 
-void APlayerCharacter::EquipShotgun()
+void APlayerCharacter::EquipLightningGun()
 {
-	if (WeaponComp->QueryWeapons(EAmmoType::EAT_Buckshot))
+	if (WeaponComp->QueryWeapons(EAmmoType::EAT_Voltaic))
 	{
 		WeaponComp->EquipWeapon("LightningGun");
 		WeaponMesh->SetStaticMesh(WeaponComp->EquippedWeapon.WeaponMesh);

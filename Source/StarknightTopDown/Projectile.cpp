@@ -38,7 +38,7 @@ void AProjectile::BeginPlay()
 	ProjectileOwner = GetOwner();
 
 	//MovementComp->Deactivate();
-	
+	CollisionSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	CollisionSphere -> IgnoreActorWhenMoving(ProjectileOwner, true);
 	CollisionSphere->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 	CollisionSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);

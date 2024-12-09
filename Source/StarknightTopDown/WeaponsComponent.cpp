@@ -131,12 +131,105 @@ void UWeaponsComponent::FireEquippedWeapon(UStaticMeshComponent* InWeaponMesh, F
 	}
 
 
-	if(EquippedWeapon.WeaponAmmoType != EAmmoType::EAT_Plasma)AlterCurrentAmmo(EquippedWeapon.WeaponAmmoType, -1);
+	//if(EquippedWeapon.WeaponAmmoType != EAmmoType::EAT_Plasma)AlterCurrentAmmo(EquippedWeapon.WeaponAmmoType, -1);
 	//AlterCurrentAmmo(EquippedWeapon.WeaponAmmoType, -1);
 
 	FTimerHandle FireTimer;
 
-	GetWorld()->GetTimerManager().SetTimer(FireTimer, this, &UWeaponsComponent::ResetCanBeFired, EquippedWeapon.WeaponDelay);
+	GetWorld()->GetTimerManager().SetTimer(ShootTimer, this, &UWeaponsComponent::ResetCanBeFired, EquippedWeapon.WeaponDelay);
+
+	//set timer to reset bCanBeFired
+}
+
+void UWeaponsComponent::FireSecondary(UStaticMeshComponent* InWeaponMesh, FVector CursorLocation)
+{
+	if (!bCanBeFired)return;
+	if (!InWeaponMesh)return;
+	if (!CurrentAmmo.Contains(EquippedWeapon.WeaponAmmoType))return;
+
+	if (CurrentAmmo.Find(EquippedWeapon.WeaponAmmoType) > 0)
+	{
+		//set bCanBeFired to false
+		//play gunfire sound
+		//spawn muzzleflash particles
+
+		bCanBeFired = false;
+
+		if (EquippedWeapon.WeaponFireSound)
+			UGameplayStatics::SpawnSoundAtLocation(
+				GetWorld(),
+				EquippedWeapon.WeaponFireSound,
+				InWeaponMesh->GetSocketLocation(FName("Barrel")),
+				InWeaponMesh->GetSocketRotation(FName("Barrel"))
+			);
+
+		if (EquippedWeapon.WeaponMuzzleFlash)
+			UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+				GetWorld(),
+				EquippedWeapon.WeaponMuzzleFlash,
+				InWeaponMesh->GetSocketLocation(FName("Barrel")),
+				InWeaponMesh->GetSocketRotation(FName("Barrel"))
+			);
+
+		switch (EquippedWeapon.WeaponAmmoType)
+		{
+		case EAmmoType::EAT_AR:
+			FireRaycast(InWeaponMesh, 0.f);
+			break;
+
+		case EAmmoType::EAT_Buckshot:
+		{
+			int i = 0;
+			while (i < 10)
+			{
+				FireRaycast(InWeaponMesh, 10.f);
+				i++;
+			}
+		}
+		break;
+
+
+		case EAmmoType::EAT_ThunderRound:
+			//Spawns projectile in the given direction
+
+			if (EquippedWeapon.ChargedProjectileClass)
+			{
+				AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(EquippedWeapon.ChargedProjectileClass, InWeaponMesh->GetSocketLocation(FName("Barrel_2")), InWeaponMesh->GetSocketRotation(FName("Barrel_2")));
+				Projectile->SetOwner(GetOwner());
+				Projectile->Damage = EquippedWeapon.WeaponDamage * 5.f;
+				Projectile->WeaponDamageType = EquippedWeapon.WeaponDamageType;
+			}
+			break;
+
+		case EAmmoType::EAT_Plasma:
+			if (EquippedWeapon.ChargedProjectileClass)
+			{
+				AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(EquippedWeapon.ChargedProjectileClass, InWeaponMesh->GetSocketLocation(FName("Barrel_2")), InWeaponMesh->GetSocketRotation(FName("Barrel_2")));
+				Projectile->SetOwner(GetOwner());
+				Projectile->Damage = EquippedWeapon.WeaponDamage * 5.f;
+				Projectile->WeaponDamageType = EquippedWeapon.WeaponDamageType;
+				UE_LOG(LogTemp, Error, TEXT("Charged Projectile Spawned"));
+			}
+			break;
+
+		case EAmmoType::EAT_Voltaic:
+			//Spawns projectile in the given direction
+
+			if (EquippedWeapon.ChargedProjectileClass)
+			{
+				AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(EquippedWeapon.ChargedProjectileClass, InWeaponMesh->GetSocketLocation(FName("Barrel_2")), InWeaponMesh->GetSocketRotation(FName("Barrel_2")));
+				Projectile->SetOwner(GetOwner());
+				Projectile->Damage = EquippedWeapon.WeaponDamage * 5.f;
+				Projectile->WeaponDamageType = EquippedWeapon.WeaponDamageType;
+			}
+			break;
+		}
+	}
+	AlterCurrentAmmo(EquippedWeapon.WeaponAmmoType, -1);
+
+	FTimerHandle SecondaryFireTimer;
+
+	GetWorld()->GetTimerManager().SetTimer(ShootTimer, this, &UWeaponsComponent::ResetCanBeFired, EquippedWeapon.WeaponDelay);
 
 	//set timer to reset bCanBeFired
 }
@@ -186,6 +279,7 @@ void UWeaponsComponent::EquipWeapon(FName InWeaponName)
 	{
 		EquippedWeapon.AmmoIcon = RowInfo->AmmoIcon;
 		EquippedWeapon.ProjectileClass = RowInfo->ProjectileClass;
+		EquippedWeapon.ChargedProjectileClass = RowInfo->ChargedProjectileClass;
 		EquippedWeapon.WeaponAmmoType = RowInfo->WeaponAmmoType;
 		EquippedWeapon.WeaponBeam = RowInfo->WeaponBeam;
 		EquippedWeapon.WeaponCrosshair = RowInfo->WeaponCrosshair;

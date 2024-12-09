@@ -55,6 +55,9 @@ struct FWeaponInfoDataTable : public FTableRowBase {
 	TSubclassOf<class AProjectile> ProjectileClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AProjectile> ChargedProjectileClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UDamageType> WeaponDamageType;
 };
 
@@ -105,6 +108,9 @@ struct FWeaponInfo {
 	TSubclassOf<class AProjectile> ProjectileClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AProjectile> ChargedProjectileClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UDamageType> WeaponDamageType;
 };
 
@@ -119,6 +125,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
 	FWeaponInfo EquippedWeapon;
+
+	FTimerHandle ShootTimer;
 
 protected:
 	// Called when the game starts
@@ -142,11 +150,14 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
 	bool bCanBeFired;
 
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void FireEquippedWeapon(UStaticMeshComponent* InWeaponMesh, FVector CursorLocation);
+
+	void FireSecondary(UStaticMeshComponent* InWeaponMesh, FVector CursorLocation);
 
 	void ResetCanBeFired();
 
