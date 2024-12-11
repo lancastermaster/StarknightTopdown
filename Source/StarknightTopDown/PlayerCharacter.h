@@ -118,6 +118,9 @@ private:
 
 	float CurrentChargeAmount;
 
+	class UNiagaraComponent* ChargeEffect;
+	class UAudioComponent* ChargeSound;
+
 	bool bInvulnerable = false;
 
 	FTimerHandle HurtHandle;

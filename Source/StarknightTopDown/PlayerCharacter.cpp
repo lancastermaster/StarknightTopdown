@@ -5,12 +5,15 @@
 #include "AmmoType.h"
 #include "Camera/CameraComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/AudioComponent.h"
 #include "Engine/DamageEvents.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "HealthComponent.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 #include "WeaponsComponent.h"
 #include "InputAction.h"
 #include "Core/InteractorComponent.h"
@@ -104,9 +107,29 @@ void APlayerCharacter::SetPrimaryDown(const FInputActionValue& KeyValue)
 			{
 				PrimaryAction();
 			}
+			ChargeEffect->DestroyComponent();
+			ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(
+				WeaponComp->EquippedWeapon.WeaponCharge,
+				WeaponMesh,
+				FName("Barrel"),
+				WeaponMesh->GetSocketLocation(FName("Barrel")),
+				WeaponMesh->GetSocketRotation(FName("Barrel")),
+				EAttachLocation::KeepWorldPosition,
+				false
+			);
+
+			ChargeSound->Stop();
+			ChargeSound->DestroyComponent();
+			ChargeSound = UGameplayStatics::SpawnSound2D(
+				GetWorld(),
+				WeaponComp->EquippedWeapon.WeaponChargeSound
+			);
+
+			ChargeSound->Play(0.f);
 		}
 	}
-		CurrentChargeAmount = 0.f;
+	//if(ChargeEffect)ChargeEffect->DestroyComponent();
+	CurrentChargeAmount = 0.f;
 		//else WeaponComp->ResetCanBeFired();
 	//}
 }
@@ -114,6 +137,73 @@ void APlayerCharacter::SetPrimaryDown(const FInputActionValue& KeyValue)
 void APlayerCharacter::SetSecondaryDown(const FInputActionValue& KeyValue)
 {
 	bSecondaryDown = KeyValue.Get<bool>();
+
+	if (bSecondaryDown)
+	{
+		//spawn charging particles
+		if (!ChargeEffect)
+		{
+			ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(
+				WeaponComp->EquippedWeapon.WeaponCharge,
+				WeaponMesh,
+				FName("Barrel"),
+				WeaponMesh->GetSocketLocation(FName("Barrel")),
+				WeaponMesh->GetSocketRotation(FName("Barrel")),
+				EAttachLocation::KeepWorldPosition,
+				false
+			);
+			
+				/**ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+					GetWorld(),
+					WeaponComp->EquippedWeapon.WeaponCharge,
+					WeaponMesh->GetSocketLocation(FName("Barrel")),
+					WeaponMesh->GetSocketRotation(FName("Barrel"))
+				);*/
+			
+			ChargeSound = UGameplayStatics::SpawnSound2D(
+				GetWorld(),
+				WeaponComp->EquippedWeapon.WeaponChargeSound
+			);
+
+			ChargeSound->Play(0.f);
+		}
+		else
+		{
+			ChargeEffect->DestroyComponent();
+			ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(
+				WeaponComp->EquippedWeapon.WeaponCharge,
+				WeaponMesh,
+				FName("Barrel"),
+				WeaponMesh->GetSocketLocation(FName("Barrel")),
+				WeaponMesh->GetSocketRotation(FName("Barrel")),
+				EAttachLocation::KeepWorldPosition,
+				false
+			);
+
+			ChargeSound->Stop();
+			ChargeSound->DestroyComponent();
+			ChargeSound = UGameplayStatics::SpawnSound2D(
+				GetWorld(),
+				WeaponComp->EquippedWeapon.WeaponChargeSound
+			);
+
+			ChargeSound->Play(0.f);
+		}
+	}
+	else
+	{
+		if (ChargeEffect)
+		{
+			ChargeEffect->DestroyComponent();
+		}
+		if (ChargeSound)
+		{
+			ChargeSound->Stop();
+			ChargeSound->DestroyComponent();
+		}
+	}
+
+	
 }
 
 void APlayerCharacter::Tick(float DeltaTime)

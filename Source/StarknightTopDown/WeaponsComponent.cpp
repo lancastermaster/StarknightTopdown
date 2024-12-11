@@ -225,7 +225,7 @@ void UWeaponsComponent::FireSecondary(UStaticMeshComponent* InWeaponMesh, FVecto
 			break;
 		}
 	}
-	AlterCurrentAmmo(EquippedWeapon.WeaponAmmoType, -1);
+	//AlterCurrentAmmo(EquippedWeapon.WeaponAmmoType, -1);
 
 	FTimerHandle SecondaryFireTimer;
 
@@ -287,12 +287,14 @@ void UWeaponsComponent::EquipWeapon(FName InWeaponName)
 		EquippedWeapon.WeaponDelay = RowInfo->WeaponDelay;
 		EquippedWeapon.WeaponFireSound = RowInfo->WeaponFireSound;
 		EquippedWeapon.WeaponHitSound = RowInfo->WeaponHitSound;
+		EquippedWeapon.WeaponChargeSound = RowInfo->WeaponChargeSound;
 		EquippedWeapon.WeaponIcon = RowInfo->WeaponIcon;
 		EquippedWeapon.WeaponImpact = RowInfo->WeaponImpact;
 		EquippedWeapon.WeaponMesh = RowInfo->WeaponMesh;
 		EquippedWeapon.WeaponMuzzleFlash = RowInfo->WeaponMuzzleFlash;
 		EquippedWeapon.WeaponName = RowInfo->WeaponName;
 		EquippedWeapon.WeaponDamageType = RowInfo->WeaponDamageType;
+		EquippedWeapon.WeaponCharge = RowInfo->WeaponCharge;
 	}
 }
 

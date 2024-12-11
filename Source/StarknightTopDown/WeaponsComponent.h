@@ -40,6 +40,9 @@ struct FWeaponInfoDataTable : public FTableRowBase {
 	USoundBase* WeaponHitSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
+	USoundBase* WeaponChargeSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
 	class UNiagaraSystem* WeaponMuzzleFlash;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
@@ -47,6 +50,9 @@ struct FWeaponInfoDataTable : public FTableRowBase {
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
 	UNiagaraSystem* WeaponBeam;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
+	UNiagaraSystem* WeaponCharge;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
 	class UStaticMesh* WeaponMesh;
@@ -93,6 +99,9 @@ struct FWeaponInfo {
 	USoundBase* WeaponHitSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
+	USoundBase* WeaponChargeSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
 	class UNiagaraSystem* WeaponMuzzleFlash;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
@@ -100,6 +109,9 @@ struct FWeaponInfo {
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
 	UNiagaraSystem* WeaponBeam;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
+	UNiagaraSystem* WeaponCharge;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
 	UStaticMesh* WeaponMesh;
