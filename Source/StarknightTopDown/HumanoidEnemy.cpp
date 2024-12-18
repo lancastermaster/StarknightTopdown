@@ -56,7 +56,8 @@ float AHumanoidEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageE
 	//ElectricDamage = Cast<UDamageTypeElectric>(DamageEvent.DamageTypeClass);
 
 
-	//UE_LOG(LogTemp, Warning, TEXT("Damage Taken"));
+	//UE_LOG(LogTemp, Warning, TEXT("Damage Type = %s"), DamageEvent.DamageTypeClass.Get()->GetDisplayNameText().ToString());
+
 	return 0.0f;
 }
 

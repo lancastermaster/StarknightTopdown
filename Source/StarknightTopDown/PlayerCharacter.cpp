@@ -4,8 +4,9 @@
 #include "PlayerCharacter.h"
 #include "AmmoType.h"
 #include "Camera/CameraComponent.h"
-#include "Components/StaticMeshComponent.h"
 #include "Components/AudioComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/PointLightComponent.h"
 #include "Engine/DamageEvents.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -52,6 +53,10 @@ APlayerCharacter::APlayerCharacter()
 	HealthComp = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Comp"));
 	WeaponComp = CreateDefaultSubobject<UWeaponsComponent>(TEXT("Weapon Comp"));
 	StatusComp = CreateDefaultSubobject<UStatusEffectComponent>(TEXT("Status Comp"));
+
+	ChargingLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("Charging Light"));
+	ChargingLight->SetupAttachment(WeaponMesh, FName("Barrel"));
+	ChargingLight->SetVisibility(false);
 
 	InteractorComp = CreateDefaultSubobject<UInteractorComponent>(TEXT("Interactor Comp"));
 }
@@ -108,6 +113,11 @@ void APlayerCharacter::SetPrimaryDown(const FInputActionValue& KeyValue)
 				PrimaryAction();
 			}
 			ChargeEffect->DestroyComponent();
+			ChargeSound->Stop();
+			ChargeSound->DestroyComponent();
+			ChargingLight->SetVisibility(false);
+
+
 			ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(
 				WeaponComp->EquippedWeapon.WeaponCharge,
 				WeaponMesh,
@@ -117,15 +127,12 @@ void APlayerCharacter::SetPrimaryDown(const FInputActionValue& KeyValue)
 				EAttachLocation::KeepWorldPosition,
 				false
 			);
-
-			ChargeSound->Stop();
-			ChargeSound->DestroyComponent();
 			ChargeSound = UGameplayStatics::SpawnSound2D(
 				GetWorld(),
 				WeaponComp->EquippedWeapon.WeaponChargeSound
 			);
-
 			ChargeSound->Play(0.f);
+			ChargingLight->SetVisibility(true);
 		}
 	}
 	//if(ChargeEffect)ChargeEffect->DestroyComponent();
@@ -166,10 +173,16 @@ void APlayerCharacter::SetSecondaryDown(const FInputActionValue& KeyValue)
 			);
 
 			ChargeSound->Play(0.f);
+
+			ChargingLight->SetVisibility(true);
 		}
 		else
 		{
 			ChargeEffect->DestroyComponent();
+			ChargeSound->Stop();
+			ChargeSound->DestroyComponent();
+			ChargingLight->SetVisibility(false);
+
 			ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(
 				WeaponComp->EquippedWeapon.WeaponCharge,
 				WeaponMesh,
@@ -180,14 +193,13 @@ void APlayerCharacter::SetSecondaryDown(const FInputActionValue& KeyValue)
 				false
 			);
 
-			ChargeSound->Stop();
-			ChargeSound->DestroyComponent();
 			ChargeSound = UGameplayStatics::SpawnSound2D(
 				GetWorld(),
 				WeaponComp->EquippedWeapon.WeaponChargeSound
 			);
 
 			ChargeSound->Play(0.f);
+			ChargingLight->SetVisibility(true);
 		}
 	}
 	else
@@ -201,6 +213,7 @@ void APlayerCharacter::SetSecondaryDown(const FInputActionValue& KeyValue)
 			ChargeSound->Stop();
 			ChargeSound->DestroyComponent();
 		}
+		ChargingLight->SetVisibility(false);
 	}
 
 	
@@ -319,6 +332,7 @@ void APlayerCharacter::EquipPlasmaGun()
 	{
 		WeaponComp->EquipWeapon("PlasmaGun");
 		WeaponMesh->SetStaticMesh(WeaponComp->EquippedWeapon.WeaponMesh);
+		ChargingLight->SetLightColor(FLinearColor(1.f, .1f, 0.f, 1.f));
 		//WeaponMesh = WeaponComp->EquippedWeapon.WeaponMesh;
 	}
 }
@@ -329,6 +343,7 @@ void APlayerCharacter::EquipLightningGun()
 	{
 		WeaponComp->EquipWeapon("LightningGun");
 		WeaponMesh->SetStaticMesh(WeaponComp->EquippedWeapon.WeaponMesh);
+		ChargingLight->SetLightColor(FLinearColor(.2f, .2f, 1.f, 1.f));
 		//WeaponMesh = WeaponComp->EquippedWeapon.WeaponMesh;
 	}
 }

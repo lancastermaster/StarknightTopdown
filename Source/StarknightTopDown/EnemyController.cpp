@@ -96,15 +96,6 @@ void AEnemyController::UpdateBlackboard(UBlackboardComponent* InBlackboardComp)
 
     InBlackboardComp->SetValueAsBool(FName("Bloodied"), bBloodied);
     InBlackboardComp->SetValueAsBool(FName("Stunned"), bStunned);
-    
-    if (bStunned)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Stunned"));
-    }
-    else
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Stunned Cleared"));
-    }
 
     uint8 StateByte = (uint8)EnemyState;
     InBlackboardComp->SetValueAsEnum(FName("State"),StateByte);

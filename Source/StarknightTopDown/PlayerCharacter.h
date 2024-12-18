@@ -37,6 +37,9 @@ class STARKNIGHTTOPDOWN_API APlayerCharacter : public AHumanoidCharacter
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	class UStatusEffectComponent* StatusComp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	class UPointLightComponent* ChargingLight;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -120,6 +123,7 @@ private:
 
 	class UNiagaraComponent* ChargeEffect;
 	class UAudioComponent* ChargeSound;
+
 
 	bool bInvulnerable = false;
 

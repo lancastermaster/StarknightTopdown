@@ -35,6 +35,9 @@ private:
 	//UNiagaraSystem* BurnEffect;
 	//UNiagaraSystem* SlowEffect;
 
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	//TMap<EStatusEffect, float> StatusEffectMax;
+	//TMap<EStatusEffect, float> StatusEffectCurrent;
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
