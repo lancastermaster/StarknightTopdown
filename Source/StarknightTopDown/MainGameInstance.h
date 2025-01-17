@@ -17,38 +17,23 @@ class STARKNIGHTTOPDOWN_API UMainGameInstance : public UGameInstance
 	
 public:
 	
+
 protected:
-	void CollectPlayerInfo(float InCurrentHealth, float InMaxHealth, TMap<EAmmoType, int> InCurrentAmmo, TMap<EAmmoType, int> InMaxAmmo, TMap<EAmmoType, bool> InUnlockedWeapons);
+	UFUNCTION(BlueprintNativeEvent)
+	void InitializeGame();
 
-	void DistributePlayerInfo();
-	
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	float PlayerCurrentHealth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Game", meta = (AllowPrivateAccess = "true"))
+	class UStarknightSaveGame* SaveGame;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	float PlayerMaxHealth;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	TMap<EAmmoType, int>PlayerCurrentAmmo;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	TMap<EAmmoType, int>PlayerMaxAmmo;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	TMap<EAmmoType, bool>PlayerUnlockedWeapons;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Win Condition", meta = (AllowPrivateAccess = "true"))
-	int EggsLeftToDestroy;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Exploration", meta = (AllowPrivateAccess = "true"))
-	int SecurityLevel{0};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Game", meta = (AllowPrivateAccess = "true"))
+	FString FileName;
 
 public:
-	
-	UFUNCTION(BlueprintCallable)
-	int GetSecurityLevel() { return SecurityLevel; }
 
 	UFUNCTION(BlueprintCallable)
-	void SetSecurityLevel(int InSecurityLevel) { SecurityLevel = InSecurityLevel; }
+	FORCEINLINE UStarknightSaveGame* GetSaveGame() { return SaveGame; }
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE FString GetSaveFileName() { return FileName; }
 };

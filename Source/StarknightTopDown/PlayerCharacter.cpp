@@ -16,6 +16,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
 #include "WeaponsComponent.h"
+#include "QuestLogComponent.h"
 #include "InputAction.h"
 #include "Core/InteractorComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -53,6 +54,7 @@ APlayerCharacter::APlayerCharacter()
 	HealthComp = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Comp"));
 	WeaponComp = CreateDefaultSubobject<UWeaponsComponent>(TEXT("Weapon Comp"));
 	StatusComp = CreateDefaultSubobject<UStatusEffectComponent>(TEXT("Status Comp"));
+	QuestLog = CreateDefaultSubobject<UQuestLogComponent>(TEXT("Quest Log"));
 
 	ChargingLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("Charging Light"));
 	ChargingLight->SetupAttachment(WeaponMesh, FName("Barrel"));
@@ -333,7 +335,6 @@ void APlayerCharacter::EquipPlasmaGun()
 		WeaponComp->EquipWeapon("PlasmaGun");
 		WeaponMesh->SetStaticMesh(WeaponComp->EquippedWeapon.WeaponMesh);
 		ChargingLight->SetLightColor(FLinearColor(1.f, .1f, 0.f, 1.f));
-		//WeaponMesh = WeaponComp->EquippedWeapon.WeaponMesh;
 	}
 }
 
@@ -344,7 +345,6 @@ void APlayerCharacter::EquipLightningGun()
 		WeaponComp->EquipWeapon("LightningGun");
 		WeaponMesh->SetStaticMesh(WeaponComp->EquippedWeapon.WeaponMesh);
 		ChargingLight->SetLightColor(FLinearColor(.2f, .2f, 1.f, 1.f));
-		//WeaponMesh = WeaponComp->EquippedWeapon.WeaponMesh;
 	}
 }
 
@@ -354,7 +354,6 @@ void APlayerCharacter::EquipQuaker()
 	{
 		WeaponComp->EquipWeapon("Quaker");
 		WeaponMesh->SetStaticMesh(WeaponComp->EquippedWeapon.WeaponMesh);
-		//WeaponMesh = WeaponComp->EquippedWeapon.WeaponMesh;
 	}
 }
 
@@ -366,11 +365,6 @@ void APlayerCharacter::ResetCanTakeDamage()
 void APlayerCharacter::HurtEffect_Implementation()
 {
 }
-
-/*void APlayerCharacter::SetWeaponProperties(FWeaponInfo InEquippedWeapon)
-{
-	WeaponMesh = WeaponComp->EquippedWeapon.WeaponMesh;
-}*/
 
 void APlayerCharacter::OnDeath_Implementation()
 {

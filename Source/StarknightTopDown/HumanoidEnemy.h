@@ -20,6 +20,9 @@ class STARKNIGHTTOPDOWN_API AHumanoidEnemy : public AHumanoidCharacter
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	class UStatusEffectComponent* StatusComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quests", meta = (AllowPrivateAccess = "true"))
+	class UQuestCallerComponent* QuestCaller;
 	
 public:
 	AHumanoidEnemy();

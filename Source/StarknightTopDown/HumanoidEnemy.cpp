@@ -7,12 +7,15 @@
 #include "Engine/DamageEvents.h"
 #include "StatusEffectComponent.h"
 #include "DamageTypeElectric.h"
+#include "QuestCallerComponent.h"
 
 AHumanoidEnemy::AHumanoidEnemy()
 {
 	HealthComp = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Comp"));
 
 	StatusComp = CreateDefaultSubobject<UStatusEffectComponent>(TEXT("Status Comp"));
+
+	QuestCaller = CreateDefaultSubobject<UQuestCallerComponent>(TEXT("Quest Caller"));
 }
 
 void AHumanoidEnemy::BeginPlay()

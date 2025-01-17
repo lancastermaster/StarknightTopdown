@@ -37,6 +37,9 @@ class STARKNIGHTTOPDOWN_API APlayerCharacter : public AHumanoidCharacter
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	class UStatusEffectComponent* StatusComp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quests", meta = (AllowPrivateAccess = "true"))
+	class UQuestLogComponent* QuestLog;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	class UPointLightComponent* ChargingLight;
 
@@ -124,6 +127,8 @@ private:
 	class UNiagaraComponent* ChargeEffect;
 	class UAudioComponent* ChargeSound;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Exploration", meta = (AllowPrivateAccess = "true"))
+	int SecurityLevel{ 0 };
 
 	bool bInvulnerable = false;
 
@@ -138,6 +143,12 @@ public:
 
 	void SetPrimaryDown(const FInputActionValue& KeyValue);
 	void SetSecondaryDown(const FInputActionValue& KeyValue);
+
+	UFUNCTION(BlueprintCallable)
+	int GetSecurityLevel() { return SecurityLevel; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetSecurityLevel(int InSecurityLevel) { SecurityLevel = InSecurityLevel; }
 
 	FORCEINLINE bool GetPlayerIsDead() { return bPlayerIsDead; }
 };
