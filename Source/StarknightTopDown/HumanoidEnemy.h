@@ -49,6 +49,9 @@ private:
 	bool bCanAttack;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	bool bAggressive; //potentially change to float? probably overkill
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	class UAnimMontage* AttackMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
@@ -62,6 +65,7 @@ public:
 
 	FORCEINLINE bool GetEnemyDead() { return HealthComp->bIsDead; }
 
+	FORCEINLINE bool GetAggression() { return bAggressive; }
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	class AEnemyController* Brain;
 };

@@ -63,10 +63,18 @@ void AEnemyController::UpdateBlackboard(UBlackboardComponent* InBlackboardComp)
 
     if (bPlayerVisible)
     {
-        InBlackboardComp->SetValueAsObject(FName("TargetActor"), Player);
-        InBlackboardComp->SetValueAsVector(FName("TargetLocation"), Player->GetActorLocation());
+        if (Cast<AHumanoidEnemy>(EnemyCharacter)->GetAggression()==true)
+        {
+            InBlackboardComp->SetValueAsObject(FName("TargetActor"), Player);
+            InBlackboardComp->SetValueAsVector(FName("TargetLocation"), Player->GetActorLocation());
         
-        if(EnemyState != EEnemyAIState::EEAS_Combat) SetEnemyState(EEnemyAIState::EEAS_Combat);
+            if(EnemyState != EEnemyAIState::EEAS_Combat) SetEnemyState(EEnemyAIState::EEAS_Combat);
+        }
+        else 
+        {
+            InBlackboardComp->ClearValue(FName("TargetActor"));
+            SetEnemyState(EEnemyAIState::EEAS_Flee);
+        }
     }
     else
     {
