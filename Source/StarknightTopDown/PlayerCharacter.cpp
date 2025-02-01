@@ -96,51 +96,53 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void APlayerCharacter::SetPrimaryDown(const FInputActionValue& KeyValue)
 {
 	bPrimaryDown = KeyValue.Get<bool>();
-	 //if (WeaponComp->EquippedWeapon.WeaponAmmoType == EAmmoType::EAT_Plasma)
-	//{
+	
 	if (bPrimaryDown)
 	{
-		if (!bSecondaryDown)
+		PrimaryAction();
+
+		if (ChargeEffect)ChargeEffect->DestroyComponent();
+		if (ChargeSound)
 		{
-			PrimaryAction();
+			ChargeSound->Stop();
+			ChargeSound->DestroyComponent();
+		}
+		ChargingLight->SetVisibility(false);
+
+		ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(
+			WeaponComp->EquippedWeapon.WeaponCharge,
+			WeaponMesh,
+			FName("Barrel"),
+			WeaponMesh->GetSocketLocation(FName("Barrel")),
+			WeaponMesh->GetSocketRotation(FName("Barrel")),
+			EAttachLocation::KeepWorldPosition,
+			false
+		);
+		ChargeSound = UGameplayStatics::SpawnSound2D(
+			GetWorld(),
+			WeaponComp->EquippedWeapon.WeaponChargeSound
+		);
+
+		ChargeSound->Play(0.f);
+		ChargingLight->SetVisibility(true);
+	}
+	else
+	{
+		if (CurrentChargeAmount >= 1.0f)
+		{
+			SecondaryAction();
 		}
 		else
 		{
-			if (CurrentChargeAmount >= 1.0f)
-			{
-				SecondaryAction();
-			}
-			else
-			{
-				PrimaryAction();
-			}
-			ChargeEffect->DestroyComponent();
-			ChargeSound->Stop();
-			ChargeSound->DestroyComponent();
-			ChargingLight->SetVisibility(false);
-
-
-			ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(
-				WeaponComp->EquippedWeapon.WeaponCharge,
-				WeaponMesh,
-				FName("Barrel"),
-				WeaponMesh->GetSocketLocation(FName("Barrel")),
-				WeaponMesh->GetSocketRotation(FName("Barrel")),
-				EAttachLocation::KeepWorldPosition,
-				false
-			);
-			ChargeSound = UGameplayStatics::SpawnSound2D(
-				GetWorld(),
-				WeaponComp->EquippedWeapon.WeaponChargeSound
-			);
-			ChargeSound->Play(0.f);
-			ChargingLight->SetVisibility(true);
+			PrimaryAction();
 		}
+		ChargeEffect->DestroyComponent();
+		ChargeSound->Stop();
+		ChargeSound->DestroyComponent();
+		ChargingLight->SetVisibility(false);
 	}
-	//if(ChargeEffect)ChargeEffect->DestroyComponent();
+
 	CurrentChargeAmount = 0.f;
-		//else WeaponComp->ResetCanBeFired();
-	//}
 }
 
 void APlayerCharacter::SetSecondaryDown(const FInputActionValue& KeyValue)
@@ -225,7 +227,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Look();
 
-	if (bSecondaryDown)
+	if (bPrimaryDown)
 	{
 		CurrentChargeAmount += .01f;
 	}
