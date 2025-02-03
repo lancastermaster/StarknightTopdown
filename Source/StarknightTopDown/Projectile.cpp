@@ -68,7 +68,17 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 		{
 			if (StatusComp->QueryStatusEffects(ProjectileEffect) == true)
 			{
-				StatusComp->SetStatusEffect(ProjectileEffect, true);
+				//StatusComp->SetStatusEffect(ProjectileEffect, true);
+				switch (ProjectileEffect)
+				{
+				case EStatusEffect::ESE_Stunned:
+					StatusComp->IncreaseStun(Damage);
+					break;
+
+				case EStatusEffect::ESE_Burnt:
+					StatusComp->IncreaseBurn(Damage);
+					break;
+				}
 			}
 		}
 

@@ -121,5 +121,31 @@ void UStatusEffectComponent::ResetStunned()
 	}
 }
 
+void UStatusEffectComponent::IncreaseStun(float Increase)
+{
+	StunValue += Increase;
+	if (StunValue >= StatusEffectMax[EStatusEffect::ESE_Stunned])
+	{
+		if (!IsStatusActive(EStatusEffect::ESE_Stunned))
+		{
+			SetStatusEffect(EStatusEffect::ESE_Stunned, true);
+		}
+		StunValue = 0.f;
+	}
+}
+
+void UStatusEffectComponent::IncreaseBurn(float Increase)
+{
+	BurnValue += Increase;
+	if (BurnValue >= StatusEffectMax[EStatusEffect::ESE_Burnt])
+	{
+		if (!IsStatusActive(EStatusEffect::ESE_Burnt))
+		{
+			SetStatusEffect(EStatusEffect::ESE_Burnt, true);
+		}
+		BurnValue = 0.f;
+	}
+}
+
 
 

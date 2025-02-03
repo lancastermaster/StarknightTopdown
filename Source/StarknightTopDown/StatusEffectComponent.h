@@ -35,8 +35,8 @@ private:
 	//UNiagaraSystem* BurnEffect;
 	//UNiagaraSystem* SlowEffect;
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	//TMap<EStatusEffect, float> StatusEffectMax;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	TMap<EStatusEffect, float> StatusEffectMax;
 	//TMap<EStatusEffect, float> StatusEffectCurrent;
 public:	
 	// Called every frame
@@ -50,4 +50,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ResetStunned();
+
+	void IncreaseStun(float Increase);
+	void IncreaseBurn(float Increase);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	float StunValue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	float BurnValue;
 };

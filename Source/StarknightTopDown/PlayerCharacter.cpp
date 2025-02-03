@@ -149,7 +149,7 @@ void APlayerCharacter::SetSecondaryDown(const FInputActionValue& KeyValue)
 {
 	bSecondaryDown = KeyValue.Get<bool>();
 
-	if (bSecondaryDown)
+	/*if (bSecondaryDown)
 	{
 		//spawn charging particles
 		if (!ChargeEffect)
@@ -164,12 +164,12 @@ void APlayerCharacter::SetSecondaryDown(const FInputActionValue& KeyValue)
 				false
 			);
 			
-				/**ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+				ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
 					GetWorld(),
 					WeaponComp->EquippedWeapon.WeaponCharge,
 					WeaponMesh->GetSocketLocation(FName("Barrel")),
 					WeaponMesh->GetSocketRotation(FName("Barrel"))
-				);*/
+				);
 			
 			ChargeSound = UGameplayStatics::SpawnSound2D(
 				GetWorld(),
@@ -218,7 +218,7 @@ void APlayerCharacter::SetSecondaryDown(const FInputActionValue& KeyValue)
 			ChargeSound->DestroyComponent();
 		}
 		ChargingLight->SetVisibility(false);
-	}
+	}*/
 
 	
 }
