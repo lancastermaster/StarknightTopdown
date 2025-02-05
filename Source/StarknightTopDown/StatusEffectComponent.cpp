@@ -31,8 +31,11 @@ void UStatusEffectComponent::BeginPlay()
 	
 	if (!ActiveStunEffect)
 	{
-		ActiveStunEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(StunnedEffect, GetOwner()->GetComponentByClass<USkeletalMeshComponent>(), FName("Torso"), FVector(0.f), FRotator(0.f), EAttachLocation::SnapToTarget, false);
-		ActiveStunEffect->Deactivate();
+		if (StunnedEffect)
+		{
+			ActiveStunEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(StunnedEffect, GetOwner()->GetComponentByClass<USkeletalMeshComponent>(), FName("Torso"), FVector(0.f), FRotator(0.f), EAttachLocation::SnapToTarget, false);
+			ActiveStunEffect->Deactivate();
+		}
 	}
 }
 

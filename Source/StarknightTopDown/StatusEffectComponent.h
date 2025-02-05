@@ -42,15 +42,19 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
+	UFUNCTION()
 	void SetStatusEffect(EStatusEffect NewStatus, bool IsActive);
 
+	UFUNCTION()
 	bool QueryStatusEffects(EStatusEffect Query);
 
+	UFUNCTION()
 	bool IsStatusActive(EStatusEffect Query);
 
 	UFUNCTION(BlueprintCallable)
 	void ResetStunned();
 
+	UFUNCTION(BlueprintCallable)
 	void IncreaseStun(float Increase);
 	void IncreaseBurn(float Increase);
 
