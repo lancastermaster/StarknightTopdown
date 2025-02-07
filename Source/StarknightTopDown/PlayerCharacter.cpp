@@ -148,79 +148,6 @@ void APlayerCharacter::SetPrimaryDown(const FInputActionValue& KeyValue)
 void APlayerCharacter::SetSecondaryDown(const FInputActionValue& KeyValue)
 {
 	bSecondaryDown = KeyValue.Get<bool>();
-
-	/*if (bSecondaryDown)
-	{
-		//spawn charging particles
-		if (!ChargeEffect)
-		{
-			ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(
-				WeaponComp->EquippedWeapon.WeaponCharge,
-				WeaponMesh,
-				FName("Barrel"),
-				WeaponMesh->GetSocketLocation(FName("Barrel")),
-				WeaponMesh->GetSocketRotation(FName("Barrel")),
-				EAttachLocation::KeepWorldPosition,
-				false
-			);
-			
-				ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAtLocation(
-					GetWorld(),
-					WeaponComp->EquippedWeapon.WeaponCharge,
-					WeaponMesh->GetSocketLocation(FName("Barrel")),
-					WeaponMesh->GetSocketRotation(FName("Barrel"))
-				);
-			
-			ChargeSound = UGameplayStatics::SpawnSound2D(
-				GetWorld(),
-				WeaponComp->EquippedWeapon.WeaponChargeSound
-			);
-
-			ChargeSound->Play(0.f);
-
-			ChargingLight->SetVisibility(true);
-		}
-		else
-		{
-			ChargeEffect->DestroyComponent();
-			ChargeSound->Stop();
-			ChargeSound->DestroyComponent();
-			ChargingLight->SetVisibility(false);
-
-			ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(
-				WeaponComp->EquippedWeapon.WeaponCharge,
-				WeaponMesh,
-				FName("Barrel"),
-				WeaponMesh->GetSocketLocation(FName("Barrel")),
-				WeaponMesh->GetSocketRotation(FName("Barrel")),
-				EAttachLocation::KeepWorldPosition,
-				false
-			);
-
-			ChargeSound = UGameplayStatics::SpawnSound2D(
-				GetWorld(),
-				WeaponComp->EquippedWeapon.WeaponChargeSound
-			);
-
-			ChargeSound->Play(0.f);
-			ChargingLight->SetVisibility(true);
-		}
-	}
-	else
-	{
-		if (ChargeEffect)
-		{
-			ChargeEffect->DestroyComponent();
-		}
-		if (ChargeSound)
-		{
-			ChargeSound->Stop();
-			ChargeSound->DestroyComponent();
-		}
-		ChargingLight->SetVisibility(false);
-	}*/
-
-	
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -395,7 +322,7 @@ float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 		else
 		{
 			HealthComp->bIsDead = false;
-			//StatusComp->TriggerEffect_Implementation(DamageEvent.DamageTypeClass);
+			//trigger status effects here if the player is subject to those mechanics
 		}
 
 		return DamageAmount;

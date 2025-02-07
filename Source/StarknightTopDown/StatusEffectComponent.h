@@ -37,7 +37,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	TMap<EStatusEffect, float> StatusEffectMax;
-	//TMap<EStatusEffect, float> StatusEffectCurrent;
+	
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -56,7 +56,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void IncreaseStun(float Increase);
+	
 	void IncreaseBurn(float Increase);
+	
+	UFUNCTION()
+	void IncreaseStatusValue(float InDamage, EStatusEffect InStatusEffect);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	float StunValue;

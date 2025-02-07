@@ -6,6 +6,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/DamageType.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "NiagaraFunctionLibrary.h"
@@ -48,6 +49,8 @@ void AProjectile::BeginPlay()
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	FDamageEvent Event(WeaponDamageType);
+
 
 	if (ProjectileOwner == nullptr)
 	{
@@ -63,7 +66,8 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 		UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
 		UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwnerInstigator, ProjectileOwner, WeaponDamageType);
 		
-		auto StatusComp = OtherActor->GetComponentByClass<UStatusEffectComponent>();
+		//OtherActor->TakeDamage(Damage, Event, MyOwnerInstigator, ProjectileOwner);
+		/*auto StatusComp = OtherActor->GetComponentByClass<UStatusEffectComponent>();
 		if (StatusComp)
 		{
 			if (StatusComp->QueryStatusEffects(ProjectileEffect) == true)
@@ -80,7 +84,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 					break;
 				}
 			}
-		}
+		}*/
 
 		if (HitParticles)
 		{

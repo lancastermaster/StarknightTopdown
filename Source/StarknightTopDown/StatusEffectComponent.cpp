@@ -4,6 +4,9 @@
 #include "StatusEffectComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "GameFramework/DamageType.h"
+#include "DamageTypeBase.h"
+#include "DamageTypeElectric.h"
+#include "DamageTypeThermal.h"
 #include "StatusEffect.h"
 #include "EnemyController.h"
 #include "Engine/World.h"
@@ -147,6 +150,39 @@ void UStatusEffectComponent::IncreaseBurn(float Increase)
 			SetStatusEffect(EStatusEffect::ESE_Burnt, true);
 		}
 		BurnValue = 0.f;
+	}
+}
+
+void UStatusEffectComponent::IncreaseStatusValue(float InDamage, EStatusEffect InStatusEffect)
+{
+	if (InDamage > 0.f)
+	{
+		switch (InStatusEffect)
+		{
+			case EStatusEffect::ESE_Stunned:
+				StunValue += InDamage;
+				if (StunValue >= StatusEffectMax[EStatusEffect::ESE_Stunned])
+				{
+					if (!IsStatusActive(EStatusEffect::ESE_Stunned))
+					{
+						SetStatusEffect(EStatusEffect::ESE_Stunned, true);
+					}
+					StunValue = 0.f;
+				}
+				break;
+
+			case EStatusEffect::ESE_Burnt:
+				BurnValue += InDamage;
+				if (BurnValue >= StatusEffectMax[EStatusEffect::ESE_Burnt])
+				{
+					if (!IsStatusActive(EStatusEffect::ESE_Burnt))
+					{
+						SetStatusEffect(EStatusEffect::ESE_Burnt, true);
+					}
+					BurnValue = 0.f;
+				}
+				break;
+		}
 	}
 }
 
