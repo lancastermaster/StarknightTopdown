@@ -69,7 +69,7 @@ void UStatusEffectComponent::SetStatusEffect(EStatusEffect NewStatus, bool IsAct
 				UE_LOG(LogTemp, Warning, TEXT("Stunned"));
 				StatusEffects.Add(EStatusEffect::ESE_Stunned, true);
 
-				ActiveStunEffect->Activate();
+				if(ActiveStunEffect)ActiveStunEffect->Activate();
 
 				if (GetWorld()->GetTimerManager().IsTimerActive(StunHandle) == false)
 				{

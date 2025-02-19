@@ -59,7 +59,7 @@ public:
 	
 	void IncreaseBurn(float Increase);
 	
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void IncreaseStatusValue(float InDamage, EStatusEffect InStatusEffect);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))

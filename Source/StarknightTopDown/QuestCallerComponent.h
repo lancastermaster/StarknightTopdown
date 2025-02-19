@@ -24,12 +24,13 @@ protected:
 	class UQuestLogComponent* PlayerLog;
 
 private:
-	UPROPERTY(EditDefaultsOnly, Category = "Quest")
-	FString QuestToCall;
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Quest")
+	FString QuestToCall;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Quest System")
 	void CallReceived();

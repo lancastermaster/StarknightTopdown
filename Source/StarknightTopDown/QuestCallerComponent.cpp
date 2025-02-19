@@ -55,10 +55,10 @@ void UQuestCallerComponent::CallSent_Implementation()
 {
 	AActor* Owner = GetOwner();
 
-	if (Cast<AHumanoidEnemy>(Owner))
-	{
+	//if (Cast<AHumanoidEnemy>(Owner))
+	//{
 		CallQuestID(QuestToCall);
-	}
+	//}
 }
 
 void UQuestCallerComponent::CallQuestID(FString QuestID)

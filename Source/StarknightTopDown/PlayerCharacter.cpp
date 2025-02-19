@@ -128,13 +128,13 @@ void APlayerCharacter::SetPrimaryDown(const FInputActionValue& KeyValue)
 	}
 	else
 	{
-		if (CurrentChargeAmount >= 1.0f)
+		if (CurrentChargeAmount < 1.0f)
 		{
-			SecondaryAction();
+			PrimaryAction();
 		}
 		else
 		{
-			PrimaryAction();
+			SecondaryAction();
 		}
 		ChargeEffect->DestroyComponent();
 		ChargeSound->Stop();
