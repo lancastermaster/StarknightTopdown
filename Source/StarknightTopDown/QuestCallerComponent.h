@@ -29,7 +29,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Quest")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Quest")
 	FString QuestToCall;
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Quest System")
@@ -38,7 +38,10 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Quest System")
 	void CallSent();
 
-	virtual void CallQuestID(FString QuestID) override;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Quest System")
+	void CallUpdateProgress(int InProgress);
 
+	virtual void CallQuestID(FString QuestID) override;
+	virtual void CallQuest(FString QuestID, int InProgress) override;
 	virtual void ReceiveQuestID(FString QuestID) override;
 };

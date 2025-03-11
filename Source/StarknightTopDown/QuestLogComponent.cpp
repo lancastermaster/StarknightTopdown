@@ -48,6 +48,17 @@ void UQuestLogComponent::ProgressQuest(FString QuestID)
 	CallQuestID(QuestID);
 }
 
+void UQuestLogComponent::DeprogressQuest(FString QuestID)
+{
+	int ProgressToDecrease = QuestProgress.QuestProgress[QuestID];
+	ProgressToDecrease--;
+	QuestProgress.QuestProgress.Add(QuestID,ProgressToDecrease);
+	
+	CompleteQuest(QuestID); //Will do nothing if progress doesn't meet the correct threshold
+
+	CallQuestID(QuestID);
+}
+
 void UQuestLogComponent::InitializeQuestData()
 {
 	TArray<FName> RowNames = QuestDataTable->GetRowNames();
@@ -94,6 +105,26 @@ void UQuestLogComponent::ReceiveQuestID(FString QuestID)
 	if (QuestData.Find(QuestID))
 	{
 		ProgressQuest(QuestID);
+	}
+}
+
+void UQuestLogComponent::ReceiveQuest(FString QuestID, int InProgress)
+{
+	if (QuestData.Find(QuestID))
+	{
+		switch (InProgress)
+		{
+		case -1:
+			DeprogressQuest(QuestID);
+			break;
+
+		case 1:
+			ProgressQuest(QuestID);
+			break;
+
+		default:
+			break;
+		}
 	}
 }
 

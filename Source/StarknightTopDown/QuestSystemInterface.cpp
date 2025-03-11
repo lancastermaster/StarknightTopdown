@@ -9,6 +9,14 @@ void IQuestSystemInterface::CallQuestID(FString QuestID)
 {
 }
 
+void IQuestSystemInterface::CallQuest(FString QuestID, int InProgress)
+{
+}
+
 void IQuestSystemInterface::ReceiveQuestID(FString QuestID)
+{
+}
+
+void IQuestSystemInterface::ReceiveQuest(FString QuestID, int InProgress)
 {
 }

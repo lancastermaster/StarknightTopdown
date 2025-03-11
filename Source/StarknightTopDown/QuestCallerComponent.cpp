@@ -54,15 +54,22 @@ void UQuestCallerComponent::ReceiveQuestID(FString QuestID)
 void UQuestCallerComponent::CallSent_Implementation()
 {
 	AActor* Owner = GetOwner();
+	CallQuestID(QuestToCall);
+}
 
-	//if (Cast<AHumanoidEnemy>(Owner))
-	//{
-		CallQuestID(QuestToCall);
-	//}
+void UQuestCallerComponent::CallUpdateProgress_Implementation(int InProgress)
+{
+	AActor* Owner = GetOwner();
+	CallQuest(QuestToCall, InProgress);
 }
 
 void UQuestCallerComponent::CallQuestID(FString QuestID)
 {
 	if (PlayerLog) PlayerLog->ReceiveQuestID(QuestID);
+}
+
+void UQuestCallerComponent::CallQuest(FString QuestID, int InProgress)
+{
+	if (PlayerLog) PlayerLog->ReceiveQuest(QuestID, InProgress);
 }
 

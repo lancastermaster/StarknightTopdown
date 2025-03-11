@@ -24,6 +24,7 @@ class STARKNIGHTTOPDOWN_API IQuestSystemInterface
 public:
 	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Quest")
 	virtual void CallQuestID(FString QuestID);
-
+	virtual void CallQuest(FString QuestID, int InProgress);
 	virtual void ReceiveQuestID(FString QuestID);
+	virtual void ReceiveQuest(FString QuestID, int InProgress);
 };

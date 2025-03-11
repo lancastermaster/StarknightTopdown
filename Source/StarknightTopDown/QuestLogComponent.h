@@ -26,6 +26,8 @@ protected:
 
 	void ProgressQuest(FString QuestID);
 
+	void DeprogressQuest(FString QuestID);
+
 	void InitializeQuestData();
 
 	//LoadQuestProgress
@@ -42,6 +44,7 @@ public:
 	virtual void CallQuestID(FString QuestID) override;
 
 	virtual void ReceiveQuestID(FString QuestID) override;
+	virtual void ReceiveQuest(FString QuestID, int InProgress) override;
 
 	//void CallQuestID(FString QuestID);
 	//TArray<class AQuest*> Quests; //becoming obsolete

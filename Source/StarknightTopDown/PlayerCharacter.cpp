@@ -24,6 +24,7 @@
 #include "StatusEffectComponent.h"
 #include "Sound/SoundBase.h"
 #include "TimerManager.h"
+#include "Projectile.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -109,7 +110,7 @@ void APlayerCharacter::SetPrimaryDown(const FInputActionValue& KeyValue)
 		}
 		ChargingLight->SetVisibility(false);
 
-		ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(
+		if(WeaponComp->EquippedWeapon.WeaponCharge)ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(
 			WeaponComp->EquippedWeapon.WeaponCharge,
 			WeaponMesh,
 			FName("Barrel"),
@@ -118,24 +119,19 @@ void APlayerCharacter::SetPrimaryDown(const FInputActionValue& KeyValue)
 			EAttachLocation::KeepWorldPosition,
 			false
 		);
-		ChargeSound = UGameplayStatics::SpawnSound2D(
+		if(WeaponComp->EquippedWeapon.WeaponChargeSound)ChargeSound = UGameplayStatics::SpawnSound2D(
 			GetWorld(),
 			WeaponComp->EquippedWeapon.WeaponChargeSound
 		);
 
-		ChargeSound->Play(0.f);
+		if(ChargeSound)ChargeSound->Play(0.f);
+
 		ChargingLight->SetVisibility(true);
 	}
 	else
 	{
-		if (CurrentChargeAmount < 1.0f)
-		{
-			PrimaryAction();
-		}
-		else
-		{
-			SecondaryAction();
-		}
+		if ((CurrentChargeAmount >= 1.0f)&&(WeaponComp->EquippedWeapon.ChargedProjectileClass)) SecondaryAction();
+		
 		ChargeEffect->DestroyComponent();
 		ChargeSound->Stop();
 		ChargeSound->DestroyComponent();
