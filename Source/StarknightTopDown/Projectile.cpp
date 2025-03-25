@@ -38,13 +38,10 @@ void AProjectile::BeginPlay()
 
 	ProjectileOwner = GetOwner();
 
-	//MovementComp->Deactivate();
 	CollisionSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	CollisionSphere -> IgnoreActorWhenMoving(ProjectileOwner, true);
 	CollisionSphere->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
 	CollisionSphere->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	//FTimerHandle DelayHandle;
-	//GetWorld()->GetTimerManager().SetTimer(DelayHandle, this, &AProjectile::ActivateProjectile, 0.2f);
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -55,7 +52,6 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	if (ProjectileOwner == nullptr)
 	{
 		ProjectileOwner = GetOwner();
-		//Destroy();
 	}
 
 	AController* MyOwnerInstigator = ProjectileOwner->GetInstigatorController();
@@ -65,35 +61,11 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
 		UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwnerInstigator, ProjectileOwner, WeaponDamageType);
-		
-		//OtherActor->TakeDamage(Damage, Event, MyOwnerInstigator, ProjectileOwner);
-		/*auto StatusComp = OtherActor->GetComponentByClass<UStatusEffectComponent>();
-		if (StatusComp)
-		{
-			if (StatusComp->QueryStatusEffects(ProjectileEffect) == true)
-			{
-				//StatusComp->SetStatusEffect(ProjectileEffect, true);
-				switch (ProjectileEffect)
-				{
-				case EStatusEffect::ESE_Stunned:
-					StatusComp->IncreaseStun(Damage);
-					break;
-
-				case EStatusEffect::ESE_Burnt:
-					StatusComp->IncreaseBurn(Damage);
-					break;
-				}
-			}
-		}*/
 
 		if (HitParticles)
 		{
 			UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, HitParticles, GetActorLocation(), GetActorRotation());
 		}
-		/*if (HitCameraShakeClass)
-		{
-			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(HitCameraShakeClass);
-		}*/
 	}
 	Destroy();
 }

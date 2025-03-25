@@ -54,6 +54,7 @@ protected:
 	void Look();
 
 	void Interact();
+	void Dash();
 	void PrimaryAction();
 	void SecondaryAction();
 

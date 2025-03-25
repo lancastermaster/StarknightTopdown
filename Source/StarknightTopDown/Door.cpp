@@ -2,6 +2,7 @@
 
 
 #include "Door.h"
+#include "QuestCallerComponent.h"
 
 // Sets default values
 ADoor::ADoor()
@@ -13,6 +14,8 @@ ADoor::ADoor()
 
 	DoorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door Mesh"));
 	DoorMesh->SetupAttachment(DoorFrame);
+
+	QuestCaller = CreateDefaultSubobject<UQuestCallerComponent>(TEXT("Quest Caller"));
 }
 
 // Called when the game starts or when spawned
@@ -26,7 +29,7 @@ void ADoor::CheckLocks()
 {
 	int LocksNumber = 0;
 
-	if (Locks.IsEmpty()) return;
+	if (Locks.IsEmpty()) OpenDoor();
 	else
 	{
 		for (auto lock : Locks)
@@ -45,6 +48,14 @@ void ADoor::CheckLocks()
 			OpenDoor();
 		}
 	}
+}
+
+void ADoor::CallReceived_Implementation()
+{
+}
+
+void ADoor::CallSent_Implementation()
+{
 }
 
 void ADoor::OpenDoor_Implementation()

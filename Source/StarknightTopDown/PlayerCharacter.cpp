@@ -90,7 +90,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	Input->BindAction<APlayerCharacter>(Hotkey1Action, ETriggerEvent::Triggered, this, &APlayerCharacter::EquipPlasmaGun);
 	Input->BindAction<APlayerCharacter>(Hotkey2Action, ETriggerEvent::Triggered, this, &APlayerCharacter::EquipLightningGun);
 	Input->BindAction<APlayerCharacter>(Hotkey3Action, ETriggerEvent::Triggered, this, &APlayerCharacter::EquipQuaker);
-	//Input->BindAction<APlayerCharacter>(SecondaryInputAction, ETriggerEvent::Started, this, &APlayerCharacter::SecondaryAction);
+	//Input->BindAction<APlayerCharacter>(DashAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Dash);
 	//Input->BindAction<APlayerCharacter>(PrimaryInputAction, ETriggerEvent::, this, &APlayerCharacter::SetPrimaryUp);
 }
 
@@ -195,6 +195,15 @@ void APlayerCharacter::Look()
 
 void APlayerCharacter::Interact()
 {
+}
+
+void APlayerCharacter::Dash()
+{
+	FVector CurrentLocation = GetActorLocation();
+	FVector TargetLocation = GetActorForwardVector() * 200;
+
+	FVector NewLocation = FMath::VInterpConstantTo(CurrentLocation, CurrentLocation+TargetLocation, GetWorld()->GetDeltaSeconds(), 60.f);
+	SetActorLocation(NewLocation);
 }
 
 void APlayerCharacter::PrimaryAction()
