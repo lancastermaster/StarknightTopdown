@@ -7,27 +7,32 @@
 #include "HealthComponent.h"
 #include "WeaponsComponent.h"
 
-void UStarknightSaveGame::CollectPlayerInfo(float InCurrentHealth, float InMaxHealth, float InDamageThreshold, int InSecurityLevel, TMap<EAmmoType, int> InCurrentAmmo, TMap<EAmmoType, int> InMaxAmmo, TMap<EAmmoType, bool> InUnlockedWeapons)
+void UStarknightSaveGame::CollectPlayerInfo()
 {
-	CurrentHealth = InCurrentHealth;
-	MaxHealth = InMaxHealth;
-	DamageThreshold = InDamageThreshold;
-	SecurityLevel = InSecurityLevel;
+	APlayerCharacter* Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	//Player->CollectPlayerSaveInfo();
+
+	FPlayerSaveInfo InfoToSave = Player->GetPlayerSaveInfo();
+
+	CurrentHealth = InfoToSave.CurrentHealth;
+	MaxHealth = InfoToSave.MaxHealth;
+	DamageThreshold = InfoToSave.DamageThreshold;
+	SecurityLevel = InfoToSave.SecurityLevel;
 
 	CurrentAmmo.Empty();
-	for (auto tuple : InCurrentAmmo)
+	for (auto tuple : InfoToSave.CurrentAmmo)
 	{
 		CurrentAmmo.Add(tuple.Key, tuple.Value);
 	}
 
 	MaxAmmo.Empty();
-	for (auto tuple : InMaxAmmo)
+	for (auto tuple : InfoToSave.MaxAmmo)
 	{
 		MaxAmmo.Add(tuple.Key, tuple.Value);
 	}
 
 	UnlockedWeapons.Empty();
-	for (auto tuple : InUnlockedWeapons)
+	for (auto tuple : InfoToSave.UnlockedWeapons)
 	{
 		UnlockedWeapons.Add(tuple.Key, tuple.Value);
 	}

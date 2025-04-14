@@ -277,24 +277,54 @@ void UWeaponsComponent::EquipWeapon(FName InWeaponName)
 	FWeaponInfoDataTable* RowInfo = WeaponDataTable->FindRow<FWeaponInfoDataTable>(InWeaponName,FString(""));
 	if (RowInfo)
 	{
-		EquippedWeapon.AmmoIcon = RowInfo->AmmoIcon;
-		EquippedWeapon.ProjectileClass = RowInfo->ProjectileClass;
-		EquippedWeapon.ChargedProjectileClass = RowInfo->ChargedProjectileClass;
+		if (RowInfo->AmmoIcon)EquippedWeapon.AmmoIcon = RowInfo->AmmoIcon;
+		else EquippedWeapon.AmmoIcon = nullptr;
+
+		if (RowInfo->ProjectileClass)EquippedWeapon.ProjectileClass = RowInfo->ProjectileClass;
+		else EquippedWeapon.ProjectileClass = nullptr;
+
+		if (RowInfo->ChargedProjectileClass)EquippedWeapon.ChargedProjectileClass = RowInfo->ChargedProjectileClass;
+		else EquippedWeapon.ChargedProjectileClass = nullptr;
+
 		EquippedWeapon.WeaponAmmoType = RowInfo->WeaponAmmoType;
-		EquippedWeapon.WeaponBeam = RowInfo->WeaponBeam;
-		EquippedWeapon.WeaponCrosshair = RowInfo->WeaponCrosshair;
+
+		if (RowInfo->WeaponBeam)EquippedWeapon.WeaponBeam = RowInfo->WeaponBeam;
+		else EquippedWeapon.WeaponBeam = nullptr;
+
+		if (RowInfo->WeaponCrosshair)EquippedWeapon.WeaponCrosshair = RowInfo->WeaponCrosshair;
+		else EquippedWeapon.WeaponCrosshair = nullptr;
+
 		EquippedWeapon.WeaponDamage = RowInfo->WeaponDamage;
 		EquippedWeapon.WeaponDelay = RowInfo->WeaponDelay;
-		EquippedWeapon.WeaponFireSound = RowInfo->WeaponFireSound;
-		EquippedWeapon.WeaponHitSound = RowInfo->WeaponHitSound;
-		EquippedWeapon.WeaponChargeSound = RowInfo->WeaponChargeSound;
-		EquippedWeapon.WeaponIcon = RowInfo->WeaponIcon;
-		EquippedWeapon.WeaponImpact = RowInfo->WeaponImpact;
-		EquippedWeapon.WeaponMesh = RowInfo->WeaponMesh;
-		EquippedWeapon.WeaponMuzzleFlash = RowInfo->WeaponMuzzleFlash;
+
+		if (RowInfo->WeaponFireSound)EquippedWeapon.WeaponFireSound = RowInfo->WeaponFireSound;
+		else EquippedWeapon.WeaponFireSound = nullptr;
+
+		if (RowInfo->WeaponHitSound)EquippedWeapon.WeaponHitSound = RowInfo->WeaponHitSound;
+		else EquippedWeapon.WeaponHitSound = nullptr;
+
+		if (RowInfo->WeaponChargeSound)EquippedWeapon.WeaponChargeSound = RowInfo->WeaponChargeSound;
+		else EquippedWeapon.WeaponChargeSound = nullptr;
+
+		if (RowInfo->WeaponIcon)EquippedWeapon.WeaponIcon = RowInfo->WeaponIcon;
+		else EquippedWeapon.WeaponIcon = nullptr;
+
+		if (RowInfo->WeaponImpact)EquippedWeapon.WeaponImpact = RowInfo->WeaponImpact;
+		else EquippedWeapon.WeaponImpact = nullptr;
+
+		if (RowInfo->WeaponMesh)EquippedWeapon.WeaponMesh = RowInfo->WeaponMesh;
+		else EquippedWeapon.WeaponMesh = nullptr;
+
+		if (RowInfo->WeaponMuzzleFlash)EquippedWeapon.WeaponMuzzleFlash = RowInfo->WeaponMuzzleFlash;
+		else EquippedWeapon.WeaponMuzzleFlash = nullptr;
+
 		EquippedWeapon.WeaponName = RowInfo->WeaponName;
-		EquippedWeapon.WeaponDamageType = RowInfo->WeaponDamageType;
-		EquippedWeapon.WeaponCharge = RowInfo->WeaponCharge;
+
+		if (RowInfo->WeaponDamageType)EquippedWeapon.WeaponDamageType = RowInfo->WeaponDamageType;
+		else EquippedWeapon.WeaponDamageType = nullptr;
+
+		if (RowInfo->WeaponCharge)EquippedWeapon.WeaponCharge = RowInfo->WeaponCharge;
+		else EquippedWeapon.WeaponCharge = nullptr;
 	}
 }
 

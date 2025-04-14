@@ -10,6 +10,7 @@
 /**
  * 
  */
+
 UCLASS()
 class STARKNIGHTTOPDOWN_API UMainGameInstance : public UGameInstance
 {
@@ -19,7 +20,7 @@ public:
 	
 
 protected:
-	UFUNCTION(BlueprintNativeEvent)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void InitializeGame();
 
 private:
@@ -30,10 +31,36 @@ private:
 	FString FileName;
 
 public:
-
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE UStarknightSaveGame* GetSaveGame() { return SaveGame; }
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE FString GetSaveFileName() { return FileName; }
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health", meta = (AllowPrivateAccess = "true"))
+	float CurrentHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health", meta = (AllowPrivateAccess = "true"))
+	float MaxHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health", meta = (AllowPrivateAccess = "true"))
+	float DamageThreshold;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons", meta = (AllowPrivateAccess = "true"))
+	TMap<EAmmoType, int>CurrentAmmo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons", meta = (AllowPrivateAccess = "true"))
+	TMap<EAmmoType, int>MaxAmmo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons", meta = (AllowPrivateAccess = "true"))
+	TMap<EAmmoType, bool>UnlockedWeapons;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "World", meta = (AllowPrivateAccess = "true"))
+	int SecurityLevel;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "World", meta = (AllowPrivateAccess = "true"))
+	FName LevelToOpen;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "World", meta = (AllowPrivateAccess = "true"))
+	FVector SaveLocation;
 };

@@ -11,6 +11,39 @@
 /**
  * 
  */
+USTRUCT(BlueprintType)
+struct FPlayerSaveInfo 
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health", meta = (AllowPrivateAccess = "true"))
+	float CurrentHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health", meta = (AllowPrivateAccess = "true"))
+	float MaxHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health", meta = (AllowPrivateAccess = "true"))
+	float DamageThreshold;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons", meta = (AllowPrivateAccess = "true"))
+	TMap<EAmmoType, int>CurrentAmmo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons", meta = (AllowPrivateAccess = "true"))
+	TMap<EAmmoType, int>MaxAmmo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapons", meta = (AllowPrivateAccess = "true"))
+	TMap<EAmmoType, bool>UnlockedWeapons;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "World", meta = (AllowPrivateAccess = "true"))
+	FName LevelToOpen;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "World", meta = (AllowPrivateAccess = "true"))
+	FVector SaveLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "World", meta = (AllowPrivateAccess = "true"))
+	int SecurityLevel;
+};
+
 UCLASS()
 class STARKNIGHTTOPDOWN_API APlayerCharacter : public AHumanoidCharacter
 {
@@ -74,6 +107,8 @@ protected:
 
 
 private:
+
+	//Player Input
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input", meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* CombatMappingContext;
 
@@ -107,13 +142,14 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Input", meta = (AllowPrivateAccess = "true"))
 	UInputAction* ScrollWheelAction;
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	bool bPrimaryDown;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	bool bSecondaryDown;
 	
+	float CurrentChargeAmount;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	bool bPlayerIsDead;
 
@@ -123,10 +159,14 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	float HurtReactTime{ 3.f };
 
-	float CurrentChargeAmount;
-
+	//VFX
 	class UNiagaraComponent* ChargeEffect;
+
+	//SFX
 	class UAudioComponent* ChargeSound;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Upgrades", meta = (AllowPrivateAccess = "true"))
+	TMap<FString, bool> Powerups;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Exploration", meta = (AllowPrivateAccess = "true"))
 	int SecurityLevel{ 0 };
@@ -134,10 +174,24 @@ private:
 	bool bInvulnerable = false;
 
 	FTimerHandle HurtHandle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SaveInfo", meta = (AllowPrivateAccess = "true"))
+	struct FPlayerSaveInfo PlayerInfo;
 	/*
-	gameInstance reference
 	animMontages
 	*/
+
+	class UMainGameInstance* GameInstance;
+
+	//UI
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UUserWidget> HUDClass;
+	UUserWidget* HUD;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UUserWidget> GameOverScreenClass;
+	UUserWidget* GameOverScreen;*/
+
 public:
 	APlayerCharacter();
 
@@ -152,4 +206,11 @@ public:
 	void SetSecurityLevel(int InSecurityLevel) { SecurityLevel = InSecurityLevel; }
 
 	FORCEINLINE bool GetPlayerIsDead() { return bPlayerIsDead; }
+
+	void CollectPlayerSaveInfo();
+
+	void LoadPlayerInfo();
+
+	UFUNCTION(BlueprintCallable)
+	FPlayerSaveInfo GetPlayerSaveInfo();
 };

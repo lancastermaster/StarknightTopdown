@@ -25,6 +25,8 @@
 #include "Sound/SoundBase.h"
 #include "TimerManager.h"
 #include "Projectile.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
+#include "MainGameInstance.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -68,6 +70,8 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GameInstance = Cast<UMainGameInstance>(UGameplayStatics::GetGameInstance(this));
 	EquipPlasmaGun();
 }
 
@@ -110,23 +114,26 @@ void APlayerCharacter::SetPrimaryDown(const FInputActionValue& KeyValue)
 		}
 		ChargingLight->SetVisibility(false);
 
-		if(WeaponComp->EquippedWeapon.WeaponCharge)ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(
-			WeaponComp->EquippedWeapon.WeaponCharge,
-			WeaponMesh,
-			FName("Barrel"),
-			WeaponMesh->GetSocketLocation(FName("Barrel")),
-			WeaponMesh->GetSocketRotation(FName("Barrel")),
-			EAttachLocation::KeepWorldPosition,
-			false
-		);
-		if(WeaponComp->EquippedWeapon.WeaponChargeSound)ChargeSound = UGameplayStatics::SpawnSound2D(
+		if (WeaponComp->EquippedWeapon.WeaponCharge != nullptr)
+		{
+			ChargeEffect = UNiagaraFunctionLibrary::SpawnSystemAttached(
+				WeaponComp->EquippedWeapon.WeaponCharge,
+				WeaponMesh,
+				FName("Barrel"),
+				WeaponMesh->GetSocketLocation(FName("Barrel")),
+				WeaponMesh->GetSocketRotation(FName("Barrel")),
+				EAttachLocation::KeepWorldPosition,
+				false);
+		
+			ChargingLight->SetVisibility(true);
+		}
+		if(WeaponComp->EquippedWeapon.WeaponChargeSound != nullptr)ChargeSound = UGameplayStatics::SpawnSound2D(
 			GetWorld(),
 			WeaponComp->EquippedWeapon.WeaponChargeSound
 		);
 
 		if(ChargeSound)ChargeSound->Play(0.f);
 
-		ChargingLight->SetVisibility(true);
 	}
 	else
 	{
@@ -144,6 +151,69 @@ void APlayerCharacter::SetPrimaryDown(const FInputActionValue& KeyValue)
 void APlayerCharacter::SetSecondaryDown(const FInputActionValue& KeyValue)
 {
 	bSecondaryDown = KeyValue.Get<bool>();
+}
+
+void APlayerCharacter::CollectPlayerSaveInfo()
+{
+	GameInstance->CurrentHealth = HealthComp->CurrentHealth;
+	GameInstance->MaxHealth = HealthComp->MaxHealth;
+	GameInstance->DamageThreshold = HealthComp->DamageThreshold;
+	GameInstance->SecurityLevel = SecurityLevel;
+
+	GameInstance->CurrentAmmo.Empty();
+	for (auto tuple : WeaponComp->CurrentAmmo)
+	{
+		GameInstance->CurrentAmmo.Add(tuple.Key, tuple.Value);
+	}
+
+	GameInstance->MaxAmmo.Empty();
+	for (auto tuple : WeaponComp->MaxAmmo)
+	{
+		GameInstance->MaxAmmo.Add(tuple.Key, tuple.Value);
+	}
+
+	GameInstance->UnlockedWeapons.Empty();
+	for (auto tuple : WeaponComp->UnlockedWeapons)
+	{
+		GameInstance->UnlockedWeapons.Add(tuple.Key, tuple.Value);
+	}
+}
+
+void APlayerCharacter::LoadPlayerInfo()
+{
+	//PlayerInfo = InInfo;
+
+	HealthComp->CurrentHealth = GameInstance->CurrentHealth;
+	HealthComp->MaxHealth = GameInstance->MaxHealth;
+	HealthComp->DamageThreshold = GameInstance->DamageThreshold;
+
+	SecurityLevel = GameInstance->SecurityLevel;
+
+	WeaponComp->CurrentAmmo.Empty();
+	WeaponComp->MaxAmmo.Empty();
+	WeaponComp->UnlockedWeapons.Empty();
+
+	for (auto tuple : GameInstance->CurrentAmmo)
+	{
+		WeaponComp->CurrentAmmo.Add(tuple.Key, tuple.Value);
+	}
+
+	for (auto tuple : GameInstance->MaxAmmo)
+	{
+		WeaponComp->MaxAmmo.Add(tuple.Key, tuple.Value);
+	}
+
+	for (auto tuple : GameInstance->UnlockedWeapons)
+	{
+		WeaponComp->UnlockedWeapons.Add(tuple.Key, tuple.Value);
+	}
+}
+
+FPlayerSaveInfo APlayerCharacter::GetPlayerSaveInfo()
+{
+	CollectPlayerSaveInfo();
+
+	return PlayerInfo;
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -288,6 +358,13 @@ void APlayerCharacter::EquipQuaker()
 	{
 		WeaponComp->EquipWeapon("Quaker");
 		WeaponMesh->SetStaticMesh(WeaponComp->EquippedWeapon.WeaponMesh);
+		if (ChargeEffect)ChargeEffect->DestroyComponent();
+		if (ChargeSound)
+		{
+			ChargeSound->Stop();
+			ChargeSound->DestroyComponent();
+		}
+		ChargingLight->SetVisibility(false);
 	}
 }
 
@@ -302,6 +379,30 @@ void APlayerCharacter::HurtEffect_Implementation()
 
 void APlayerCharacter::OnDeath_Implementation()
 {
+	/*APlayerController* Controller = UGameplayStatics::GetPlayerController(this, 0);
+
+	if (HealthComp->bIsDead)
+	{
+		//play death sound
+		//play death particles
+		//play death animation/ragdoll
+		//GetMesh()->SetCollisionProfileName(FName(""))
+		GetMesh()->SetSimulatePhysics(true);
+		//hide the player
+		//lock player input
+		UWidgetBlueprintLibrary::SetInputMode_UIOnlyEx(Controller);
+		//show game over screen - UI
+	}
+	else
+	{
+		//reset player stats based on last checkpoint/save point
+		LoadPlayerInfo();
+		GetMesh()->SetSimulatePhysics(false);
+		
+		//remove gameover screen and unhide HUD
+		//unblock input
+		UWidgetBlueprintLibrary::SetInputMode_GameOnly(Controller);
+	}*/
 }
 
 float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -323,6 +424,7 @@ float APlayerCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 		if (HealthComp->CurrentHealth <= 0.f)
 		{
 			HealthComp->bIsDead = true;
+			OnDeath();
 		}
 		else
 		{

@@ -18,7 +18,7 @@ class STARKNIGHTTOPDOWN_API UStarknightSaveGame : public USaveGame
 	
 public:
 	UFUNCTION(BlueprintCallable)
-	void CollectPlayerInfo(float InCurrentHealth, float InMaxHealth, float InDamageThreshold, int InSecurityLevel, TMap<EAmmoType, int>InCurrentAmmo, TMap<EAmmoType, int>InMaxAmmo, TMap<EAmmoType, bool>InUnlockedWeapons);
+	void CollectPlayerInfo();
 
 	UFUNCTION(BlueprintCallable)
 	void DistributePlayerInfo();
@@ -49,8 +49,18 @@ private:
 	FName LevelToOpen;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "World", meta = (AllowPrivateAccess = "true"))
-	FTransform SaveStationTransform;
+	FVector SaveLocation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "World", meta = (AllowPrivateAccess = "true"))
 	int SecurityLevel;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void SetSaveLocation(FVector InLocation) { SaveLocation = InLocation; }
+	
+	UFUNCTION(BlueprintCallable)
+	FVector GetSaveTransform() { return SaveLocation; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetLevelToOpen(FName InLevel) { LevelToOpen = InLevel; }
 };

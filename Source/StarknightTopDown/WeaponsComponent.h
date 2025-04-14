@@ -146,22 +146,12 @@ protected:
 
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	TMap<EAmmoType, int>CurrentAmmo;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	TMap<EAmmoType, int>MaxAmmo;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
-	TMap<EAmmoType, bool>UnlockedWeapons;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
 	UDataTable* WeaponDataTable;
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Info", meta = (AllowPrivateAccess = "true"))
 	bool bCanBeFired;
-
 
 public:	
 	// Called every frame
@@ -180,19 +170,31 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int HasAmmo(EAmmoType WeaponAmmoType) { return CurrentAmmo[WeaponAmmoType]; }
 
+	UFUNCTION(BlueprintCallable)
 	int QueryMaxAmmo(EAmmoType WeaponAmmoType) { return MaxAmmo[WeaponAmmoType]; }
 
 	UFUNCTION(BlueprintCallable)
 	void AlterCurrentAmmo(EAmmoType WeaponAmmoType, int ChangeAmount);
 
+	UFUNCTION(BlueprintCallable)
 	void AlterMaxAmmo(EAmmoType WeaponAmmoType, int ChangeAmount);
 
 	void UnlockWeapon(EAmmoType Weapon, bool bUnlock) { UnlockedWeapons.Add(Weapon, bUnlock); }
 
+	UFUNCTION(BlueprintCallable)
 	bool QueryWeapons(EAmmoType Weapon) { return UnlockedWeapons[Weapon]; }
 
+	UFUNCTION(BlueprintCallable)
 	bool GetCanBeFired() { return bCanBeFired; }
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	TMap<EAmmoType, int>CurrentAmmo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	TMap<EAmmoType, int>MaxAmmo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	TMap<EAmmoType, bool>UnlockedWeapons;
 	//bool GetBeamEndLocation(const FVector& BulletSpawnLocation, FHitResult& OutHitResult);
 		
 };
