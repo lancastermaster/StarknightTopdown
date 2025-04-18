@@ -23,6 +23,12 @@ protected:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void InitializeGame();
 
+	UFUNCTION(BlueprintCallable)
+	void SavePlayerInfo();
+
+	UFUNCTION(BlueprintCallable)
+	void LoadPlayerInfo();
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Game", meta = (AllowPrivateAccess = "true"))
 	class UStarknightSaveGame* SaveGame;

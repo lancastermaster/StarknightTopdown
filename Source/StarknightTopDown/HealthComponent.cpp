@@ -43,6 +43,9 @@ float UHealthComponent::TakeDamage(float InDamage)
 		else
 		{
 			CurrentHealth = OutHealth;
+			if (OutHealth <= (MaxHealth / BloodiedMod)) bIsBloodied = true;
+			else bIsBloodied = false;
+
 			return OutHealth;
 		}
 	}

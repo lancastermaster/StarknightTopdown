@@ -207,10 +207,9 @@ public:
 
 	FORCEINLINE bool GetPlayerIsDead() { return bPlayerIsDead; }
 
+	UFUNCTION(BlueprintCallable)
 	void CollectPlayerSaveInfo();
 
-	void LoadPlayerInfo();
-
 	UFUNCTION(BlueprintCallable)
-	FPlayerSaveInfo GetPlayerSaveInfo();
+	void LoadPlayerInfo();
 };

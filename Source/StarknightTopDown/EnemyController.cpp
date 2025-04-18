@@ -85,14 +85,14 @@ void AEnemyController::UpdateBlackboard(UBlackboardComponent* InBlackboardComp)
     InBlackboardComp->SetValueAsBool(FName("PlayerDead"), Player->GetPlayerIsDead());
     InBlackboardComp->SetValueAsBool(FName("SelfDead"), HumanoidEnemy->GetEnemyDead());
 
-    if (EnemyHealthComp->CurrentHealth <= (EnemyHealthComp->MaxHealth / 2))
+    /*if (EnemyHealthComp->CurrentHealth <= (EnemyHealthComp->MaxHealth / 2))
     {
         bBloodied = true;
     }
     else
     {
         bBloodied = false;
-    }
+    }*/
 
     if (StatusComp)
     {
@@ -102,7 +102,7 @@ void AEnemyController::UpdateBlackboard(UBlackboardComponent* InBlackboardComp)
         }
     }
 
-    InBlackboardComp->SetValueAsBool(FName("Bloodied"), bBloodied);
+    InBlackboardComp->SetValueAsBool(FName("Bloodied"), EnemyHealthComp->bIsBloodied);
     InBlackboardComp->SetValueAsBool(FName("Stunned"), bStunned);
 
     uint8 StateByte = (uint8)EnemyState;

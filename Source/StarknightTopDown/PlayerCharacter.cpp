@@ -209,13 +209,6 @@ void APlayerCharacter::LoadPlayerInfo()
 	}
 }
 
-FPlayerSaveInfo APlayerCharacter::GetPlayerSaveInfo()
-{
-	CollectPlayerSaveInfo();
-
-	return PlayerInfo;
-}
-
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Look();

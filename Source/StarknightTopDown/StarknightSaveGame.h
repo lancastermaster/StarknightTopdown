@@ -27,6 +27,7 @@ protected:
 private:
 	FQuestSaveData* PlayerQuestData;
 
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health", meta = (AllowPrivateAccess = "true"))
 	float CurrentHealth;
 
@@ -54,7 +55,6 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "World", meta = (AllowPrivateAccess = "true"))
 	int SecurityLevel;
 
-public:
 	UFUNCTION(BlueprintCallable)
 	void SetSaveLocation(FVector InLocation) { SaveLocation = InLocation; }
 	
